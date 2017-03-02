@@ -38,7 +38,8 @@ const store = new Vuex.Store({ ...options })
       rootState, // same as store.state, only in modules
       commit,    // same as store.commit
       dispatch,  // same as store.dispatch
-      getters    // same as store.getters
+      getters,   // same as store.getters
+      namespace  // modules namespace identifier
     }
     ```
 
@@ -51,9 +52,11 @@ const store = new Vuex.Store({ ...options })
     Register getters on the store. The getter function receives the following arguments:
 
     ```
-    state,     // will be module local state if defined in a module.
-    getters,   // same as store.getters
-    rootState  // same as store.state
+    state,       // will be module local state if defined in a module.
+    getters,     // same as store.getters, or local module getters
+    rootState,   // same as store.state
+    rootGetters, // same as store.getter
+    namespace    // module namespace identifier
     ```
     Registered getters are exposed on `store.getters`.
 

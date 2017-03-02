@@ -247,13 +247,11 @@ function installModule (store, rootState, path, module, hot) {
   })
 
   module.forEachAction((action, key) => {
-    const namespacedType = namespace + key
-    registerAction(store, namespacedType, action, local)
+    registerAction(store, namespace, key, action, local)
   })
 
   module.forEachGetter((getter, key) => {
-    const namespacedType = namespace + key
-    registerGetter(store, namespacedType, getter, local)
+    registerGetter(store, namespace, key, getter, local)
   })
 
   module.forEachChild((child, key) => {
@@ -348,7 +346,8 @@ function registerMutation (store, type, handler, local) {
   })
 }
 
-function registerAction (store, type, handler, local) {
+function registerAction (store, namespace, key, handler, local) {
+  const type = namespace + key
   const entry = store._actions[type] || (store._actions[type] = [])
   entry.push(function wrappedActionHandler (payload, cb) {
     let res = handler({
@@ -357,7 +356,8 @@ function registerAction (store, type, handler, local) {
       getters: local.getters,
       state: local.state,
       rootGetters: store.getters,
-      rootState: store.state
+      rootState: store.state,
+      namespace
     }, payload, cb)
     if (!isPromise(res)) {
       res = Promise.resolve(res)
@@ -373,7 +373,8 @@ function registerAction (store, type, handler, local) {
   })
 }
 
-function registerGetter (store, type, rawGetter, local) {
+function registerGetter (store, namespace, key, rawGetter, local) {
+  const type = namespace + key
   if (store._wrappedGetters[type]) {
     console.error(`[vuex] duplicate getter key: ${type}`)
     return
@@ -383,7 +384,8 @@ function registerGetter (store, type, rawGetter, local) {
       local.state, // local state
       local.getters, // local getters
       store.state, // root state
-      store.getters // root getters
+      store.getters, // root getters
+      namespace // module namespace
     )
   }
 }

@@ -146,13 +146,14 @@ namespace NamespacedModule {
             state: { value: 3 },
             getters: {
               constant: () => 10,
-              count (state, getters, rootState, rootGetters) {
+              count (state, getters, rootState, rootGetters, namespace) {
                 getters.constant;
                 rootGetters.rootValue;
+                namespace === 'a/c/';
               }
             },
             actions: {
-              test ({ dispatch, commit, getters, rootGetters }) {
+              test ({ dispatch, commit, getters, rootGetters, namespace }) {
                 getters.constant;
                 rootGetters.rootValue;
 
@@ -161,6 +162,8 @@ namespace NamespacedModule {
 
                 commit("foo");
                 commit("foo", null, { root: true });
+
+                namespace === 'a/c/';
               },
               foo () {}
             },

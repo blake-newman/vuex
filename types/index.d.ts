@@ -53,6 +53,7 @@ export interface ActionContext<S, R> {
   getters: any;
   rootState: R;
   rootGetters: any;
+  namespace: string;
 }
 
 export interface Payload {
@@ -78,7 +79,9 @@ export interface StoreOptions<S> {
   strict?: boolean;
 }
 
-export type Getter<S, R> = (state: S, getters: any, rootState: R, rootGetters: any) => any;
+export type Getter<S, R> = (
+  state: S, getters: any, rootState: R, rootGetters: any, namespace: string
+) => any;
 export type Action<S, R> = (injectee: ActionContext<S, R>, payload: any) => any;
 export type Mutation<S> = (state: S, payload: any) => any;
 export type Plugin<S> = (store: Store<S>) => any;

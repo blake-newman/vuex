@@ -265,7 +265,10 @@ describe('Modules', () => {
               a: 1
             },
             getters: {
-              b: () => 2
+              b: (state, getters, rootState, rootGetters, namespace) => {
+                expect(namespace).toBe('a/')
+                return 2
+              }
             },
             actions: {
               [TEST]: actionSpy
@@ -281,6 +284,7 @@ describe('Modules', () => {
       expect(store.getters['a/b']).toBe(2)
       store.dispatch('a/' + TEST)
       expect(actionSpy).toHaveBeenCalled()
+      expect(actionSpy.calls.argsFor(0)[0].namespace).toBe('a/')
       store.commit('a/' + TEST)
       expect(mutationSpy).toHaveBeenCalled()
     })

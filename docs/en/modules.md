@@ -136,6 +136,8 @@ If you want to use global state and getters, `rootState` and `rootGetters` are p
 
 To dispatch actions or commit mutations in the global namespace, pass `{ root: true }` as the 3rd argument to `dispatch` and `commit`.
 
+Sometimes child namespaced modules may want to be accessed in getters or to dispatch an action, most commonly with dynamically added modules. The namespace is provided in the action context and getter arguments.
+
 ``` js
 modules: {
   foo: {
@@ -144,7 +146,8 @@ modules: {
     getters: {
       // `getters` is localized to this module's getters
       // you can use rootGetters via 4th argument of getters
-      someGetter (state, getters, rootState, rootGetters) {
+      // you can use the modules namespace via 5th argument of getters
+      someGetter (state, getters, rootState, rootGetters, namespace) {
         getters.someOtherGetter // -> 'foo/someOtherGetter'
         rootGetters.someOtherGetter // -> 'someOtherGetter'
       },
@@ -154,7 +157,8 @@ modules: {
     actions: {
       // dispatch and commit are also localized for this module
       // they will accept `root` option for the root dispatch/commit
-      someAction ({ dispatch, commit, getters, rootGetters }) {
+      // the modules namespace is available in the action context
+      someAction ({ dispatch, commit, getters, rootGetters, namespace }) {
         getters.someGetter // -> 'foo/someGetter'
         rootGetters.someGetter // -> 'someGetter'
 
@@ -169,6 +173,12 @@ modules: {
   }
 }
 ```
+
+
+#### Accessing namepace identifier in actions and getters
+
+
+
 
 #### Binding Helpers with Namespace
 
